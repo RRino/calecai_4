@@ -60,7 +60,7 @@
 
                     <div class="row justify-content-md-center ">
 
-                        <!----------------- TIPO VOLANTINO dev -------------->
+                        <!----------------- TIPO VOLANTINO devremote -------------->
                         <div class="col col-lg-6">
 
                             <label class="labex">Scelta del metodo di creazione dell'attività e del tipo di iscrizione

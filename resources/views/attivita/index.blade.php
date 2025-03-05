@@ -38,45 +38,55 @@ $attivita = $viewData['attivita'];
     }
 
     .card {
-        box-shadow: 2px 2px #140881;
+        box-shadow: 1px 1px #140881;
 
     }
 
     .card.carta {
         background: rgb(215 231 175);
         padding: 5px;
-    }
-
-    li.list-group-item {
-        background: rgb(215 231 175);
+        /* width: 18rem;*/
+        margin: 10px;
+        border-radius: 1px;
+        padding-bottom: 20px;
     }
 
     .img_box {
         display: block;
         margin-left: auto;
         margin-right: auto;
+        margin-bottom: 10px;
         width: 250px;
-        height: 200px;
+        height: 300px;
         padding-right: 5px;
     }
 
-    .card-text:last-child {
+    .card-text {
         margin-bottom: 0;
-        /*height: 80px;*/
+        height: 80px;
         overflow: auto
     }
 
     .card-title {
         height: 40px;
         overflow: auto;
-        font-size: 13px;
+        font-size: 14px;
         font-weight: 600;
+        height: auto;
     }
 
+    .gruppo-titolo {
+    min-height: 100px;
+    padding-left: 10px;
+}
     .categoria {
         text-align: center;
         color: rgb(88 12 12);
-        [$attiv->tipo_attivita] font-weight: 700;
+        font-weight: 700;
+    }
+
+    .list-date {
+        margin-left: -40px;
     }
 
     .dv {
@@ -124,7 +134,7 @@ $attivita = $viewData['attivita'];
 
     .contatti {
         min-height: 20px;
-        margin-left: 20px;
+        margin-left: 10px;
     }
 
     .lb_cerca {
@@ -208,7 +218,7 @@ $attivita = $viewData['attivita'];
             <div class="grid-container_attivita">
 
                 @foreach ($attivita as $attiv)
-                    <div class="card carta" style="width: 16rem;">
+                    <div class="card carta">
 
                         <!-- visualizza tipo di attivita nel box in alto -->
                         <div class="categoria">
@@ -230,19 +240,24 @@ $attivita = $viewData['attivita'];
                         @else
                             {{ 'IMMAGINE MANCANTE' }}
                         @endif
-                        <hr>
 
-                        @if (isset($attiv->titolo) && $attiv->titolo != '')
-                            <a href="{{ url('/attivita/singolo' . '/' . $attiv->id) }}">
-                                <p class="card-title">{{ $attiv->titolo }}</p>
-                            </a>
-                        @else
-                            {{ 'MANCA IL TITOLO' }}
-                        @endif
-
-                        <!-- Note sottotitolo-->
-                        <p class="card-text">{{ strip_tags($attiv->note) }}</p>
-
+                        <div class="gruppo-titolo">
+                            <div>
+                                @if (isset($attiv->titolo) && $attiv->titolo != '')
+                                    <a href="{{ url('/attivita/singolo' . '/' . $attiv->id) }}">
+                                        <p class="card-title">{{ $attiv->titolo }}</p>
+                                    </a>
+                                @else
+                                    {{ 'MANCA IL TITOLO' }}
+                                @endif
+                            </div>
+                            <div class="note">
+                                <!-- Note sottotitolo-->
+                                @if (isset($attiv->note) && $attiv->note != '')
+                                    <p class="card-text">{{ strip_tags($attiv->note) }}</p>
+                                @endif
+                            </div>
+                        </div>
 
                         @php
                             // $fine = Carbon::createFromFormat('Y-m-d', $attiv->data_fine)->format('d-m-Y');
@@ -251,7 +266,7 @@ $attivita = $viewData['attivita'];
                             $fine = Carbon::createFromFormat('Y-m-d', $attiv->data_fine)->format('d-m-Y');
                         @endphp
 
-                        <ul class="list-group list-group-flush">
+                        <ul class="list-date">
                             <li>
                                 <label class="lab">Inizio</label><span class="dato">{{ $inizio }}</span>
                             </li>
@@ -274,16 +289,16 @@ $attivita = $viewData['attivita'];
 
                                     <div class="prog">
                                         <!-- visualizza volantino -->
-                                        @if ($attiv->tipo_volantino == 0) 
+                                        @if ($attiv->tipo_volantino == 0)
                                             <!-- visualizza file pdf aggiornato del tipo_volantino interno--->
                                             <a target="_blank"
                                                 href="{{ url('/show-pdf' . '/' . $attiv->pdf_file . '/' . $attiv->id) . '?t=' . time() }}">Programma</a>
-                                        @elseif($attiv->tipo_volantino == 2)  
-                                           <!-- visualizza file pdf aggiornato del tipo_volantino autogenerato--->
+                                        @elseif($attiv->tipo_volantino == 2)
+                                            <!-- visualizza file pdf aggiornato del tipo_volantino autogenerato--->
                                             <a targhet="_blank"
                                                 href="{{ url('/attivita/get_programma' . '/' . $attiv->id) }}">Programma</a>
                                         @elseif($attiv->tipo_volantino == 1)
-                                         <!-- visualizza file pdf del tipo_volantino link su server esterno-->
+                                            <!-- visualizza file pdf del tipo_volantino link su server esterno-->
                                             {{ 'Programma non disponibile' }}
                                         @endif
                                         <br>
@@ -297,9 +312,10 @@ $attivita = $viewData['attivita'];
                                                         <div>
                                                             @if (strpos($attiv->link_modulo_esterno, 'https://') !== false ||
                                                                     strpos($attiv->link_modulo_esterno, 'http://') !== false)
-                                                                <a href="{{ $attiv->link_modulo_esterno }}">
+                                                              
+                                                               <a href="{{ $attiv->link_modulo_esterno }}">
                                                                     <span
-                                                                        style="color:rgba(var(--bs-link-color-rgb)">{{ 'Iscrizione' }}
+                                                                        style="color:rgba(var(--bs-link-color-rgb)">{{ 'Iscrizione' }}<br>
                                                                         @if ($attiv->socio == 1)
                                                                             <label class="socio">Solo soci</label><br>
                                                                         @endif
@@ -308,10 +324,9 @@ $attivita = $viewData['attivita'];
                                                                                     Soci</span></label><br>
                                                                         @endif
                                                                     </span>
-
                                                                 </a>
                                                             @else
-                                                                <span style="color:green">{{ 'Iscrizione' }}</span>
+                                                                <span style="color:green">{{ 'Iscrizione' }}</span><br>
                                                             @endif
                                                         </div>
                                                     @else
@@ -334,6 +349,7 @@ $attivita = $viewData['attivita'];
                                                             $attiv->inizio_iscrizioni,
                                                         )->format('d-m-Y');
                                                     @endphp
+                                                    <br>
                                                     {{ 'Inizio ' . $inizio_iscr }}
                                                 @endif
 
